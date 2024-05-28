@@ -22,7 +22,7 @@ class VideoPlayout extends StatefulWidget {
 class _VideoPlayoutState extends State<VideoPlayout>
     with PlayerObserver, MultiAudioSupport {
   final String _url = null;
-  List<HLSManifestLanguage> _hlsLanguages = List<HLSManifestLanguage>();
+  List<HLSManifestLanguage> _hlsLanguages = [];
 
   @override
   void initState() {
@@ -51,12 +51,13 @@ class _VideoPlayoutState extends State<VideoPlayout>
               title: "MTA International",
               subtitle: "Reaching The Corners Of The Earth",
               preferredAudioLanguage: "eng",
-              isLiveStream: true,
+              isLiveStream: false,
               position: 0,
               url: _url,
               onViewCreated: _onViewCreated,
               desiredState: widget.desiredState,
               preferredTextLanguage: "en",
+              loop: false,
             ),
           ),
           /* multi language menu */

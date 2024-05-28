@@ -26,21 +26,23 @@ import 'package:flutter_playout/textTrack.dart';
 /// into the HLS manifest, no more configuration required on iOS side.
 class Video extends StatefulWidget {
   final bool autoPlay;
+  final bool loop;
   final bool showControls;
-  final String url;
-  final String title;
-  final String subtitle;
-  final String preferredAudioLanguage;
-  final List<TextTrack> textTracks;
-  final String preferredTextLanguage;
+  final String? url;
+  final String? title;
+  final String? subtitle;
+  final String? preferredAudioLanguage;
+  final List<TextTrack>? textTracks;
+  final String? preferredTextLanguage;
   final bool isLiveStream;
   final double position;
-  final Function onViewCreated;
+  final Function? onViewCreated;
   final PlayerState desiredState;
 
   const Video(
-      {Key key,
+      {Key? key,
       this.autoPlay = false,
+      this.loop = false,
       this.showControls = true,
       this.url,
       this.title = "",
@@ -59,8 +61,8 @@ class Video extends StatefulWidget {
 }
 
 class _VideoState extends State<Video> {
-  MethodChannel _methodChannel;
-  int _platformViewId;
+  MethodChannel? _methodChannel;
+  int? _platformViewId;
   Widget _playerWidget = Container();
 
   @override
@@ -78,13 +80,14 @@ class _VideoState extends State<Video> {
   }
 
   void _setupPlayer() {
-    if (widget.url != null && widget.url.isNotEmpty) {
+    if (widget.url != null && widget.url!.isNotEmpty) {
       /* Android */
       if (Platform.isAndroid) {
         _playerWidget = AndroidView(
           viewType: 'tv.mta/NativeVideoPlayer',
           creationParams: {
             "autoPlay": widget.autoPlay,
+            "loop": widget.loop,
             "showControls": widget.showControls,
             "url": widget.url,
             "title": widget.title ?? "",
@@ -92,15 +95,14 @@ class _VideoState extends State<Video> {
             "preferredAudioLanguage": widget.preferredAudioLanguage ?? "mul",
             "isLiveStream": widget.isLiveStream,
             "position": widget.position,
-            "textTracks": TextTrack.toJsonFromList(
-                widget.textTracks ?? List<TextTrack>()),
+            "textTracks": TextTrack.toJsonFromList(widget.textTracks ?? []),
             "preferredTextLanguage": widget.preferredTextLanguage ?? "",
           },
           creationParamsCodec: const JSONMessageCodec(),
           onPlatformViewCreated: (viewId) {
             _onPlatformViewCreated(viewId);
             if (widget.onViewCreated != null) {
-              widget.onViewCreated(viewId);
+              widget.onViewCreated!(viewId);
             }
           },
           gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
@@ -117,6 +119,7 @@ class _VideoState extends State<Video> {
           viewType: 'tv.mta/NativeVideoPlayer',
           creationParams: {
             "autoPlay": widget.autoPlay,
+            "loop": widget.loop,
             "showControls": widget.showControls,
             "url": widget.url,
             "title": widget.title ?? "",
@@ -129,7 +132,7 @@ class _VideoState extends State<Video> {
           onPlatformViewCreated: (viewId) {
             _onPlatformViewCreated(viewId);
             if (widget.onViewCreated != null) {
-              widget.onViewCreated(viewId);
+              widget.onViewCreated!(viewId);
             }
           },
           gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
@@ -144,7 +147,7 @@ class _VideoState extends State<Video> {
 
   @override
   void didUpdateWidget(Video oldWidget) {
-    if (widget.url == null || widget.url.isEmpty) {
+    if (widget.url == null || widget.url!.isEmpty) {
       _disposePlatformView();
     }
     if (oldWidget.url != widget.url ||
@@ -200,7 +203,7 @@ class _VideoState extends State<Video> {
   }
 
   void _onShowControlsFlagChanged() async {
-    _methodChannel.invokeMethod("onShowControlsFlagChanged", {
+    _methodChannel!.invokeMethod("onShowControlsFlagChanged", {
       "showControls": widget.showControls,
     });
   }
@@ -208,9 +211,9 @@ class _VideoState extends State<Video> {
   void _onPreferredAudioLanguageChanged() async {
     if (_methodChannel != null &&
         widget.preferredAudioLanguage != null &&
-        widget.preferredAudioLanguage.isNotEmpty &&
+        widget.preferredAudioLanguage!.isNotEmpty &&
         !Platform.isIOS) {
-      _methodChannel.invokeMethod(
+      _methodChannel!.invokeMethod(
           "setPreferredAudioLanguage", {"code": widget.preferredAudioLanguage});
     }
   }
@@ -218,28 +221,27 @@ class _VideoState extends State<Video> {
   void _onPreferredTextLanguageChanged() async {
     if (_methodChannel != null &&
         widget.preferredTextLanguage != null &&
-        widget.preferredTextLanguage.isNotEmpty &&
         !Platform.isIOS) {
-      _methodChannel.invokeMethod(
+      _methodChannel!.invokeMethod(
           "setPreferredTextLanguage", {"code": widget.preferredTextLanguage});
     }
   }
 
   void _onSeekPositionChanged() async {
     if (_methodChannel != null) {
-      _methodChannel.invokeMethod("seekTo", {"position": widget.position});
+      _methodChannel!.invokeMethod("seekTo", {"position": widget.position});
     }
   }
 
   void _pausePlayback() async {
     if (_methodChannel != null) {
-      _methodChannel.invokeMethod("pause");
+      _methodChannel!.invokeMethod("pause");
     }
   }
 
   void _resumePlayback() async {
     if (_methodChannel != null) {
-      _methodChannel.invokeMethod("resume");
+      _methodChannel!.invokeMethod("resume");
     }
   }
 
@@ -248,8 +250,9 @@ class _VideoState extends State<Video> {
       if (_methodChannel == null) {
         _setupPlayer();
       } else {
-        _methodChannel.invokeMethod("onMediaChanged", {
+        _methodChannel!.invokeMethod("onMediaChanged", {
           "autoPlay": widget.autoPlay,
+          "loop": widget.loop,
           "url": widget.url,
           "title": widget.title,
           "subtitle": widget.subtitle,
@@ -263,7 +266,7 @@ class _VideoState extends State<Video> {
 
   void _disposePlatformView({bool isDisposing = false}) async {
     if (_methodChannel != null && _platformViewId != null) {
-      _methodChannel.invokeMethod("dispose");
+      _methodChannel!.invokeMethod("dispose");
 
       if (!isDisposing) {
         setState(() {

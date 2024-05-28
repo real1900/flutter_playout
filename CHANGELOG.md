@@ -1,3 +1,24 @@
+## 2.0.1 [June 12, 2021]
+
+* Set iOS deployment target to 9.0
+* Fixed observed value unhandled exception in iOS implementation
+
+## 2.0.0 [June 11, 2021]
+
+* Migrated to null-safety
+
+## 1.0.43 [June 8, 2021]
+
+* Updated iOS deployment target to 9.0
+
+## 1.0.42 [November 10, 2020]
+
+* Merged [PR](https://github.com/muslimtv/flutter_playout/pull/70)
+
+## 1.0.41 [September 13, 2020]
+
+* removed isEmpty check when setting text track language
+
 ## 1.0.40 [September 7, 2020]
 
 * added support for text tracks for Android

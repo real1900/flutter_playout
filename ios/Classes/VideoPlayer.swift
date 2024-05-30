@@ -299,19 +299,15 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     
     private func onMediaChanged() {
         if let p = self.player {
-            
-            if let videoURL = URL(string: self.url) {
-                
-                /* create the new asset to play */
+            if let videoURL = URL(string: self.url.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 let asset = AVAsset(url: videoURL)
-                
                 let playerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: requiredAssetKeys)
-                
-                p.replaceCurrentItem(with: playerItem)
-                
-                /* setup lock screen controls */
-                setupRemoteTransportControls()
-                setupNowPlayingInfoPanel()
+
+                p.replaceCurrentItem(with: playerItem, completionHandler: { [weak self] _ in
+                    // handle completion if needed
+                    self?.setupRemoteTransportControls()
+                    self?.setupNowPlayingInfoPanel()
+                })
             }
         }
     }

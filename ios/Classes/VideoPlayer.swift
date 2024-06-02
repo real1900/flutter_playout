@@ -272,9 +272,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
             setupNowPlayingInfoPanel()
 
             /* start playback if svet to auto play */
-            if (self.autoPlay) {
-                play()
-            }
+            play()
 
             /* setup loop */
             if (self.loop) {

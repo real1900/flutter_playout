@@ -331,7 +331,9 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         
         if keyPath == #keyPath(AVPlayer.status) {
             if let newStatusRawValue = change?[.newKey] as? Int, let newStatus = AVPlayer.Status(rawValue: newStatusRawValue), newStatus == .readyToPlay {
-                setupPlayer()
+            
+                setupRemoteTransportControls()
+                setupNowPlayingInfoPanel()
           
                 
                     }

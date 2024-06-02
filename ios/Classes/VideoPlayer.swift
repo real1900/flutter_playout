@@ -302,12 +302,9 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
             if let videoURL = URL(string: self.url.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 let asset = AVAsset(url: videoURL)
                 let playerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: requiredAssetKeys)
-
-                p.replaceCurrentItem(with: playerItem, completionHandler: { [weak self] _ in
-                    // handle completion if needed
-                    self?.setupRemoteTransportControls()
-                    self?.setupNowPlayingInfoPanel()
-                })
+                
+                p.replaceCurrentItem(with: playerItem)
+                
             }
         }
     }
@@ -333,6 +330,11 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         
         if keyPath == #keyPath(AVPlayer.status) {
+            if let newStatusRawValue = change?[.newKey] as? Int, let newStatus = AVPlayer.Status(rawValue: newStatusRawValue), newStatus == .readyToPlay {
+                setupRemoteTransportControls()
+                setupNowPlayingInfoPanel()
+                
+                    }
             /* player status notification */
         } else if keyPath == #keyPath(AVPlayerItem.status) {
             

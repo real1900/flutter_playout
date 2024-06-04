@@ -272,17 +272,21 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
             setupNowPlayingInfoPanel()
 
             /* start playback if svet to auto play */
-//            if (self.autoPlay) {
-//                play()
-//            }
-            
-            play()
+            if (self.autoPlay) {
+                play()
+            }
 
             /* setup loop */
             if (self.loop) {
-                NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { [self] notification in
+                NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { [weak self] notification in
+                    guard let self = self else {
+                        // `self` has been deallocated, handle accordingly
+                        return
+                    }
+                    
                     self.player?.seek(to: CMTime.zero)
-                    player?.play()
+                    self.player?.play()
+                    
                 }
             }
             

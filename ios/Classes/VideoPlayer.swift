@@ -284,8 +284,12 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
                         return
                     }
                     
-                    self.player?.seek(to: CMTime.zero)
-                    self.player?.play()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        // your code here
+                        self.player?.seek(to: CMTime.zero)
+                        self.player?.play()
+                    }
+                   
                     
                 }
             }
@@ -295,6 +299,17 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
             viewController.addChild(self.playerViewController!)
             
         }
+    }
+    
+    func getVideoUrl(currentItem:AVPlayerItem?) -> URL? {
+        let asset = currentItem?.asset
+        if asset == nil {
+            return nil
+        }
+        if let urlAsset = asset as? AVURLAsset {
+            return urlAsset.url
+        }
+        return nil
     }
     
     /* create player view */

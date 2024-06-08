@@ -74,6 +74,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     var showControls:Bool = false
     var position:Double = 0.0
     var mediaElements:[MediaElement] = []
+    var currentIndex:Int = 0
 
     private var mediaDuration = 0.0
 
@@ -124,7 +125,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.showControls = parsedData["showControls"] as! Bool
         self.position = parsedData["position"] as! Double
         self.mediaElements = parseMediaElements(jsonData: parsedData["position"]) as! [MediaElement]
-
+        self.currentIndex = parsedData["currentIndex"] as! Int
         setupPlayer()
     }
 
@@ -159,7 +160,8 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
                 self.isLiveStream = parsedData["isLiveStream"] as! Bool
                 self.showControls = parsedData["showControls"] as! Bool
                 self.position = parsedData["position"] as! Double
-
+                self.mediaElements = parseMediaElements(jsonData: parsedData["position"]) as! [MediaElement]
+                self.currentIndex = parsedData["currentIndex"] as! Int
                 self.onMediaChanged()
 
                 result(true)

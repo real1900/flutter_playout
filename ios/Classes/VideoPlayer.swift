@@ -126,7 +126,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.position = parsedData["position"] as! Double
         if let jsonString = parsedData["mediaElements"] as? String,
            let jsonData = jsonString.data(using: .utf8),
-           let mediaElements = parseMediaElements(jsonData: jsonData) as? [MediaElement] {
+           let mediaElements = try? JSONDecoder().decode([MediaElement].self, from: jsonData) {
             self.mediaElements = mediaElements
         }
         self.currentIndex = parsedData["currentIndex"] as! Int
@@ -166,7 +166,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
                 self.position = parsedData["position"] as! Double
                 if let jsonString = parsedData["mediaElements"] as? String,
                    let jsonData = jsonString.data(using: .utf8),
-                   let mediaElements = parseMediaElements(jsonData: jsonData) as? [MediaElement] {
+                   let mediaElements = try? JSONDecoder().decode([MediaElement].self, from: jsonData) {
                     self.mediaElements = mediaElements
                 }
                 self.currentIndex = parsedData["currentIndex"] as! Int

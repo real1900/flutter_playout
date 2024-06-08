@@ -61,7 +61,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     var viewId:Int64
     
     /* player properties */
-    var player: FluterAVPlayer?
+    var player: FlutterAVPlayer?
     var playerViewController:AVPlayerViewController?
     
     /* player metadata */
@@ -73,6 +73,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     var isLiveStream:Bool = false
     var showControls:Bool = false
     var position:Double = 0.0
+    var mediaElements:[MediaElement] = []
 
     private var mediaDuration = 0.0
 
@@ -122,6 +123,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.isLiveStream = parsedData["isLiveStream"] as! Bool
         self.showControls = parsedData["showControls"] as! Bool
         self.position = parsedData["position"] as! Double
+        self.mediaElements = parseMediaElements(jsonData: parsedData["position"]) as! [MediaElement]
 
         setupPlayer()
     }
@@ -226,12 +228,12 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
                 let playerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: requiredAssetKeys)
 
                 /* setup player */
-                self.player = FluterAVPlayer(playerItem: playerItem)
+                self.player = FlutterAVPlayer(playerItem: playerItem)
             }
             else {
                 /* not a valid playback asset */
                 /* setup empty player */
-                self.player = FluterAVPlayer()
+                self.player = FlutterAVPlayer()
             }
 
             let center = NotificationCenter.default
@@ -289,7 +291,6 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
                         self.player?.seek(to: CMTime.zero)
                         self.player?.play()
                     }
-                   
                     
                 }
             }
@@ -301,16 +302,6 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         }
     }
     
-    func getVideoUrl(currentItem:AVPlayerItem?) -> URL? {
-        let asset = currentItem?.asset
-        if asset == nil {
-            return nil
-        }
-        if let urlAsset = asset as? AVURLAsset {
-            return urlAsset.url
-        }
-        return nil
-    }
     
     /* create player view */
     func view() -> UIView {
@@ -355,7 +346,6 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
             
                 setupRemoteTransportControls()
                 setupNowPlayingInfoPanel()
-          
                 
                     }
             /* player status notification */

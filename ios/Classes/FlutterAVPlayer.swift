@@ -8,7 +8,7 @@
 import Foundation
 import AVKit
 
-class FluterAVPlayer: AVPlayer {
+class FlutterAVPlayer: AVPlayer {
     var flutterEventSink:FlutterEventSink?
     
     /**

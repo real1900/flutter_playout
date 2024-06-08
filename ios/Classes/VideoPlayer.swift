@@ -124,7 +124,12 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.isLiveStream = parsedData["isLiveStream"] as! Bool
         self.showControls = parsedData["showControls"] as! Bool
         self.position = parsedData["position"] as! Double
-        self.mediaElements = parseMediaElements(jsonData: parsedData["mediaElements"]) as! [MediaElement]
+        if let jsonData = parsedData["mediaElements" as Data?,
+                                     let mediaElements == parseMediaElements(jsonData:jsonData) as [MediaElement]?{
+            self.mediaElements = mediaElements
+            
+        }
+        self.mediaElements = parseMediaElements(jsonData: parsedData["mediaElements"] as! Data) as! [MediaElement]
         self.currentIndex = parsedData["currentIndex"] as! Int
         setupPlayer()
     }
@@ -160,7 +165,11 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
                 self.isLiveStream = parsedData["isLiveStream"] as! Bool
                 self.showControls = parsedData["showControls"] as! Bool
                 self.position = parsedData["position"] as! Double
-                self.mediaElements = parseMediaElements(jsonData: parsedData["mediaElements"]) as! [MediaElement]
+                if let jsonData = parsedData["mediaElements" as Data?,
+                                             let mediaElements == parseMediaElements(jsonData:jsonData) as [MediaElement]?{
+                    self.mediaElements = mediaElements
+                    
+                }
                 self.currentIndex = parsedData["currentIndex"] as! Int
                 self.onMediaChanged()
 

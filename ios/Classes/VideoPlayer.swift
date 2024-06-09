@@ -49,6 +49,8 @@ class VideoPlayerFactory: NSObject, FlutterPlatformViewFactory {
     
     public func applicationDidEnterBackground() {}
     
+    public func applicationWillEntedBackground() {}
+    
     public func applicationWillEnterForeground() {}
 }
 
@@ -681,13 +683,19 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
      */
     func applicationDidEnterBackground(_ application: UIApplication) {
   
+//        if let playerViewController = playerViewController {
+//            let isFullScreen = playerViewController.isFullScreen ?? false
+//            if isFullScreen {
+//                // Player is in fullscreen mode
+//            } else {
+//                self.playerViewController?.player = nil
+//            }
+//        }
+    }
+    
+    func applicationWillEnterBackground(_ application: UIApplication){
         if let playerViewController = playerViewController {
-            let isFullScreen = playerViewController.isFullScreen ?? false
-            if isFullScreen {
-                // Player is in fullscreen mode
-            } else {
-                self.playerViewController?.player = nil
-            }
+            playerViewController.goFullScreen();
         }
     }
     
@@ -696,17 +704,30 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
      */
     func applicationWillEnterForeground(_ application: UIApplication) {
         
-        if let playerViewController = playerViewController {
-            let isFullScreen = playerViewController.isFullScreen ?? false
-            if isFullScreen {
-                // Player is in fullscreen mode
-            } else {
-                self.playerViewController?.player = self.player
-            }
-        }
+//        if let playerViewController = playerViewController {
+//            let isFullScreen = playerViewController.isFullScreen ?? false
+//            if isFullScreen {
+//                // Player is in fullscreen mode
+//            } else {
+//                self.playerViewController?.player = self.player
+//            }
+//        }
         
 //
     }
 }
+
+extension AVPlayerViewController {
+
+    func goFullScreen() {
+        let selector = NSSelectorFromString("_transitionToFullScreenViewControllerAnimated:completionHandler:")
+        if self.responds(to: selector) {
+            // first argument is animated (true for me), second is completion handler (nil in my case)
+            self.perform(selector, with: true, with: nil)
+        }
+    }
+}
+
+
 
 

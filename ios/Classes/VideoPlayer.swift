@@ -136,7 +136,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     
     @objc func willEnterBackground() {
         if let playerViewController = playerViewController {
-            playerViewController?.goFullScreen()
+            playerViewController.goFullScreen()
         }
           // Perform actions when the application will enter the background
       }

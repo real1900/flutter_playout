@@ -738,6 +738,12 @@ extension AVPlayerViewController {
     }
 }
 
+extension AVPlayer {
+    var isPlaying: Bool {
+        return rate != 0 && error == nil
+    }
+}
+
 
 
 

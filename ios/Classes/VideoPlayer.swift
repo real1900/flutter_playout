@@ -52,7 +52,7 @@ class VideoPlayerFactory: NSObject, FlutterPlatformViewFactory {
     public func applicationWillEnterForeground() {}
 }
 
-class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatformView {
+class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatformView , AVPictureInPictureControllerDelegate {
     
     static func register(with registrar: FlutterPluginRegistrar) { }
     
@@ -88,6 +88,8 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     private var flutterEventSink:FlutterEventSink?
 
     private var nowPlayingInfo = [String : Any]()
+    
+    var pictureInPictureController: AVPictureInPictureController?
 
     deinit {
         print("[dealloc] tv.mta/NativeVideoPlayer")
@@ -123,7 +125,45 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.showControls = parsedData["showControls"] as! Bool
         self.position = parsedData["position"] as! Double
         setupPlayer()
+        setupPiP()
     }
+    
+    func setupPiP() {
+            guard let playerLayer = player?.currentItem?.playerLayer else {
+                print("Player layer is not available.")
+                return
+            }
+            
+            pictureInPictureController = AVPictureInPictureController(playerLayer: playerLayer)
+            pictureInPictureController?.delegate = self
+        }
+        
+        func startPiP() {
+            guard let pictureInPictureController = pictureInPictureController else {
+                print("Picture in Picture controller is not initialized.")
+                return
+            }
+            
+            if pictureInPictureController.isPictureInPicturePossible {
+                pictureInPictureController.startPictureInPicture()
+            } else {
+                print("Picture in Picture is not possible.")
+            }
+        }
+        
+        // MARK: AVPictureInPictureControllerDelegate methods
+        
+        func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+            // PiP started
+        }
+        
+        func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+            // PiP stopped
+        }
+        
+        func pictureInPictureControllerFailedToStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController, withError error: Error) {
+            print("Failed to start Picture in Picture: \(error.localizedDescription)")
+        }
 
     /* set Flutter event channel */
     private func setupEventChannel(viewId: Int64, messenger:FlutterBinaryMessenger, instance:VideoPlayer) {

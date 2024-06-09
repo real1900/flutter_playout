@@ -327,12 +327,16 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
             self.playerViewController?.view.frame = self.frame
             self.playerViewController?.showsPlaybackControls = self.showControls
             
-            playerViewController?.player.allowsExternalPlayback = true
-              playerViewController?.entersFullScreenWhenPlaybackBegins = true
-              playerViewController?.exitsFullScreenWhenPlaybackEnds = false
-              playerViewController?.allowsPictureInPicturePlayback = true
-              playerViewController?.canStartPictureInPictureAutomaticallyFromInline = true
-            
+            if let playerViewController = playerViewController {
+                if let player = playerViewController.player {
+                    player.allowsExternalPlayback = true
+                }
+                playerViewController.entersFullScreenWhenPlaybackBegins = true
+                playerViewController.exitsFullScreenWhenPlaybackEnds = false
+                playerViewController.allowsPictureInPicturePlayback = true
+                playerViewController.canStartPictureInPictureAutomaticallyFromInline = true
+
+            }
             /* setup lock screen controls */
             setupRemoteTransportControls()
 

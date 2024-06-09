@@ -50,8 +50,6 @@ class VideoPlayerFactory: NSObject, FlutterPlatformViewFactory {
     public func applicationDidEnterBackground() {}
     
     public func applicationWillEntedBackground() {}
-    
-    public func applicationWillEnterForeground() {}
 }
 
 class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatformView , AVPictureInPictureControllerDelegate {

@@ -38,9 +38,7 @@ class Video extends StatefulWidget {
   final double position;
   final Function? onViewCreated;
   final PlayerState desiredState;
-  final String? mediaElements;
-  final int? currentIndex;
-
+  
   const Video(
       {Key? key,
       this.autoPlay = false,
@@ -51,10 +49,8 @@ class Video extends StatefulWidget {
       this.subtitle = "",
       this.preferredAudioLanguage = "mul",
       this.preferredTextLanguage = "",
-      this.mediaElements = "",
       this.isLiveStream = false,
       this.position = -1,
-      this.currentIndex = 0,
       this.onViewCreated,
       this.desiredState = PlayerState.PLAYING,
       this.textTracks})
@@ -98,8 +94,6 @@ class _VideoState extends State<Video> {
             "subtitle": widget.subtitle ?? "",
             "preferredAudioLanguage": widget.preferredAudioLanguage ?? "mul",
             "isLiveStream": widget.isLiveStream,
-            "mediaElements": widget.mediaElements ?? "",
-            "currentIndex": widget.currentIndex ?? 0,
             "position": widget.position,
             "textTracks": TextTrack.toJsonFromList(widget.textTracks ?? []),
             "preferredTextLanguage": widget.preferredTextLanguage ?? "",
@@ -130,8 +124,6 @@ class _VideoState extends State<Video> {
             "url": widget.url,
             "title": widget.title ?? "",
             "subtitle": widget.subtitle ?? "",
-            "mediaElements": widget.mediaElements ?? "",
-            "currentIndex": widget.currentIndex ?? 0,
             "preferredAudioLanguage": widget.preferredAudioLanguage ?? "mul",
             "isLiveStream": widget.isLiveStream,
             "position": widget.position,
@@ -267,8 +259,6 @@ class _VideoState extends State<Video> {
           "isLiveStream": widget.isLiveStream,
           "showControls": widget.showControls,
           "position": widget.position,
-          "currentIndex": widget.currentIndex,
-          "mediaElements": widget.mediaElements,
         });
       }
     }

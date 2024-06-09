@@ -94,6 +94,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     var pictureInPictureController: AVPictureInPictureController?
 
     deinit {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
         print("[dealloc] tv.mta/NativeVideoPlayer")
     }
 
@@ -128,7 +129,18 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.position = parsedData["position"] as! Double
         setupPlayer()
         setupPiP()
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterBackground), name: UIApplication.willResignActiveNotification, object: nil)
+         
     }
+    
+    
+    @objc func willEnterBackground() {
+        if let playerViewController = playerViewController {
+            playerViewController?.goFullScreen()
+        }
+          // Perform actions when the application will enter the background
+      }
+    
     
     func setupPiP() {
         guard let player = player else {
@@ -692,13 +704,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
 //            }
 //        }
     }
-    
-    func applicationWillEnterBackground(_ application: UIApplication){
-        if let playerViewController = playerViewController {
-            playerViewController.goFullScreen();
-        }
-    }
-    
+
     /**
      reattach player UI as app is in foreground now
      */

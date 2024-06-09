@@ -126,9 +126,9 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.position = parsedData["position"] as! Double
         setupPlayer()
         setupPiP()
-        if let playerViewController = playerViewController {
-            playerViewController.goFullScreen()
-        }
+//        if let playerViewController = playerViewController {
+//            playerViewController.goFullScreen()
+//        }
       
     }
     
@@ -697,49 +697,26 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
      detach player UI to keep audio playing in background
      */
     func applicationDidEnterBackground(_ application: UIApplication) {
-//        if let playerViewController = playerViewController {
-//            let isFullScreen = playerViewController.isFullScreen ?? false
-//            if isFullScreen {
-//                // Player is in fullscreen mode
-//            } else {
-//                self.playerViewController?.player = nil
-//            }
-//        }
+//        self.playerViewController?.player = nil
     }
 
     /**
      reattach player UI as app is in foreground now
      */
     func applicationWillEnterForeground(_ application: UIApplication) {
-//        if let playerViewController = playerViewController {
-//            let isFullScreen = playerViewController.isFullScreen ?? false
-//            if isFullScreen {
-//                // Player is in fullscreen mode
-//            } else {
-//                self.playerViewController?.player = self.player
-//            }
-//        }
+//        self.playerViewController?.player = self.player
     }
     
 }
 
-extension AVPlayerViewController {
-
-    func goFullScreen() {
-        let selector = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
-        if self.responds(to: selector) {
-            // first argument is animated (true for me), second is completion handler (nil in my case)
-            self.perform(selector, with: true, with: nil)
-        }
-    }
-}
-
-extension AVPlayer {
-    var isPlaying: Bool {
-        return rate != 0 && error == nil
-    }
-}
-
-
-
+//extension AVPlayerViewController {
+//
+//    func goFullScreen() {
+//        let selector = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
+//        if self.responds(to: selector) {
+//            // first argument is animated (true for me), second is completion handler (nil in my case)
+//            self.perform(selector, with: true, with: nil)
+//        }
+//    }
+//}
 

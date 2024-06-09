@@ -353,6 +353,8 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
                 
                 p.replaceCurrentItem(with: playerItem)
                 
+                setupPiP()
+                
             }
         }
     }

@@ -320,12 +320,19 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
             /* setup player view controller */
             self.playerViewController = AVPlayerViewController()
             if #available(iOS 10.0, *) {
-                self.playerViewController?.updatesNowPlayingInfoCenter = false
+                self.playerViewController?.updatesNowPlayingInfoCenter = true
             }
 
             self.playerViewController?.player = self.player
             self.playerViewController?.view.frame = self.frame
             self.playerViewController?.showsPlaybackControls = self.showControls
+            
+            playerViewController?.player.allowsExternalPlayback = true
+              playerViewController?.entersFullScreenWhenPlaybackBegins = true
+              playerViewController?.exitsFullScreenWhenPlaybackEnds = false
+              playerViewController?.allowsPictureInPicturePlayback = true
+              playerViewController?.canStartPictureInPictureAutomaticallyFromInline = true
+            
             /* setup lock screen controls */
             setupRemoteTransportControls()
 
@@ -686,34 +693,34 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
      detach player UI to keep audio playing in background
      */
     func applicationDidEnterBackground(_ application: UIApplication) {
-        if let playerViewController = playerViewController {
-            let isFullScreen = playerViewController.isFullScreen ?? false
-            if isFullScreen {
-                // Player is in fullscreen mode
-            } else {
-                self.playerViewController?.player = nil
-            }
-        }
+//        if let playerViewController = playerViewController {
+//            let isFullScreen = playerViewController.isFullScreen ?? false
+//            if isFullScreen {
+//                // Player is in fullscreen mode
+//            } else {
+//                self.playerViewController?.player = nil
+//            }
+//        }
     }
 
     /**
      reattach player UI as app is in foreground now
      */
     func applicationWillEnterForeground(_ application: UIApplication) {
-        if let playerViewController = playerViewController {
-            let isFullScreen = playerViewController.isFullScreen ?? false
-            if isFullScreen {
-                // Player is in fullscreen mode
-            } else {
-                self.playerViewController?.player = self.player
-            }
-        }
+//        if let playerViewController = playerViewController {
+//            let isFullScreen = playerViewController.isFullScreen ?? false
+//            if isFullScreen {
+//                // Player is in fullscreen mode
+//            } else {
+//                self.playerViewController?.player = self.player
+//            }
+//        }
     }
     
 }
 
 extension AVPlayerViewController {
-
+x
     func goFullScreen() {
         let selector = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
         if self.responds(to: selector) {

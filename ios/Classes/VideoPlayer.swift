@@ -726,7 +726,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
 extension AVPlayerViewController {
 
     func goFullScreen() {
-        let selector = NSSelectorFromString("_transitionToFullScreenViewControllerAnimated:completionHandler:")
+        let selector = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
         if self.responds(to: selector) {
             // first argument is animated (true for me), second is completion handler (nil in my case)
             self.perform(selector, with: true, with: nil)

@@ -133,11 +133,12 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     
     
     @objc func willEnterBackground() {
-        if let playerViewController = playerViewController {
+        if let playerViewController = playerViewController,
+          let player = player {
             
-            if (player?.isPlaying){
+            if (player.isPlaying){
                 playerViewController.goFullScreen()
-                player?.play()
+                player.play()
                 startPiP()
             }
             

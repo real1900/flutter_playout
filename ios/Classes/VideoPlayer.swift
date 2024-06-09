@@ -92,7 +92,6 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     var pictureInPictureController: AVPictureInPictureController?
 
     deinit {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
         print("[dealloc] tv.mta/NativeVideoPlayer")
     }
 
@@ -127,25 +126,13 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         self.position = parsedData["position"] as! Double
         setupPlayer()
         setupPiP()
-        NotificationCenter.default.addObserver(self, selector: #selector(willEnterBackground), name: UIApplication.willResignActiveNotification, object: nil)
-         
+        if let playerViewController = playerViewController {
+            playerViewController.goFullScreen()
+        }
+      
     }
     
-    
-    @objc func willEnterBackground() {
-        if let playerViewController = playerViewController,
-          let player = player {
-            
-            if (player.isPlaying){
-                playerViewController.goFullScreen()
-                player.play()
-                startPiP()
-            }
-            
-        }
-          // Perform actions when the application will enter the background
-      }
-    
+
     
     func setupPiP() {
         guard let player = player else {
@@ -699,33 +686,30 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
      detach player UI to keep audio playing in background
      */
     func applicationDidEnterBackground(_ application: UIApplication) {
-  
-//        if let playerViewController = playerViewController {
-//            let isFullScreen = playerViewController.isFullScreen ?? false
-//            if isFullScreen {
-//                // Player is in fullscreen mode
-//            } else {
-//                self.playerViewController?.player = nil
-//            }
-//        }
+        if let playerViewController = playerViewController {
+            let isFullScreen = playerViewController.isFullScreen ?? false
+            if isFullScreen {
+                // Player is in fullscreen mode
+            } else {
+                self.playerViewController?.player = nil
+            }
+        }
     }
 
     /**
      reattach player UI as app is in foreground now
      */
     func applicationWillEnterForeground(_ application: UIApplication) {
-        
-//        if let playerViewController = playerViewController {
-//            let isFullScreen = playerViewController.isFullScreen ?? false
-//            if isFullScreen {
-//                // Player is in fullscreen mode
-//            } else {
-//                self.playerViewController?.player = self.player
-//            }
-//        }
-        
-//
+        if let playerViewController = playerViewController {
+            let isFullScreen = playerViewController.isFullScreen ?? false
+            if isFullScreen {
+                // Player is in fullscreen mode
+            } else {
+                self.playerViewController?.player = self.player
+            }
+        }
     }
+    
 }
 
 extension AVPlayerViewController {

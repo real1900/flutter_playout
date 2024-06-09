@@ -163,24 +163,24 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
 
             if ("seekTo" == call.method) {
                 /* data as JSON */
-                let parsedData = call.arguments as! [String: Any]
+                if let parsedData = call.arguments as? [String: Any]{
+                    self.position = parsedData["position"] as? Double ?? 0.0
+                    self.player?.seek(to: CMTime(seconds: self.position, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+                }
 
-                self.position = parsedData["position"] as! Double
-
-                self.player?.seek(to: CMTime(seconds: self.position, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
-
+                
                 result(true)
             }
 
             if ("onShowControlsFlagChanged" == call.method) {
 
                 /* data as JSON */
-                let parsedData = call.arguments as! [String: Any]
-
-                /* set incoming player controls flag */
-                self.showControls = parsedData["showControls"] as! Bool
-
-                self.onShowControlsFlagChanged()
+                
+                if let parsedData = call.arguments as? [String: Any]{
+                    /* set incoming player controls flag */
+                    self.showControls = parsedData["showControls"] as! Bool
+                    self.onShowControlsFlagChanged()
+                }
 
                 result(true)
             }

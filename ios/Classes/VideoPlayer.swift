@@ -720,7 +720,7 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
 }
 
 extension AVPlayerViewController {
-x
+
     func goFullScreen() {
         let selector = NSSelectorFromString("enterFullScreenAnimated:completionHandler:")
         if self.responds(to: selector) {

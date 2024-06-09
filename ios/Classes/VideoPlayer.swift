@@ -129,11 +129,13 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     }
     
     func setupPiP() {
-            guard let playerLayer = player?.currentItem?.playerLayer else {
-                print("Player layer is not available.")
-                return
-            }
-            
+            guard let player = player else {
+                  print("AVPlayer instance is not available.")
+                  return
+              }
+              
+            let playerLayer = AVPlayerLayer(player: player)
+        
             pictureInPictureController = AVPictureInPictureController(playerLayer: playerLayer)
             pictureInPictureController?.delegate = self
         }

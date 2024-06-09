@@ -129,13 +129,11 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
     }
     
     func setupPiP() {
-            guard let player = player else {
-                  print("AVPlayer instance is not available.")
-                  return
-              }
-              
-            let playerLayer = AVPlayerLayer(player: player)
-        
+            guard let playerLayer = player?.currentItem?.playerLayer else {
+                print("Player layer is not available.")
+                return
+            }
+            
             pictureInPictureController = AVPictureInPictureController(playerLayer: playerLayer)
             pictureInPictureController?.delegate = self
         }
@@ -154,6 +152,13 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         }
         
         // MARK: AVPictureInPictureControllerDelegate methods
+    
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController,
+                                    restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        // Restore the user interface.
+        completionHandler(true)
+    }
+    
         
         func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
             // PiP started
@@ -166,6 +171,12 @@ class VideoPlayer: NSObject, FlutterPlugin, FlutterStreamHandler, FlutterPlatfor
         func pictureInPictureControllerFailedToStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController, withError error: Error) {
             print("Failed to start Picture in Picture: \(error.localizedDescription)")
         }
+    
+    
+    func playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart(_ playerViewController: AVPlayerViewController) -> Bool {
+        // Return true if you want the player view controller to automatically dismiss when PiP starts
+        return false
+    }
 
     /* set Flutter event channel */
     private func setupEventChannel(viewId: Int64, messenger:FlutterBinaryMessenger, instance:VideoPlayer) {
